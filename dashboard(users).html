@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HealthSaathi - Dashboard</title>
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/pTnTGXv4/De-Watermark-ai-1748085636012.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-blue: #0066cc;
+      --secondary-blue: #4a90e2;
+      --light-blue: #e6f3ff;
+      --very-light-blue: #f0f8ff;
+      --dark-blue: #003d7a;
+      --navy-blue: #1e3a8a;
+      --white: #ffffff;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1e293b;
+      --success-green: #10b981;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      background: var(--gray-50);
+      color: var(--gray-700);
+    }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      height: 70px;
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .menu-toggle {
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: var(--very-light-blue);
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .menu-toggle:hover {
+      background: var(--light-blue);
+    }
+
+    .hamburger {
+      width: 20px;
+      height: 20px;
+      position: relative;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: var(--primary-blue);
+      margin: 4px 0;
+      transition: 0.3s;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary-blue);
+    }
+
+    .brand-logo {
+      height: 40px;
+      width: 40px;
+      margin-right: 10px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--very-light-blue);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .user-profile:hover {
+      background: var(--light-blue);
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--primary-blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      top: 70px;
+      left: -250px;
+      width: 250px;
+      height: calc(100vh - 70px);
+      background: var(--white);
+      border-right: 1px solid var(--gray-200);
+      transition: left 0.3s ease;
+      z-index: 999;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .sidebar.active {
+      left: 0;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 1rem 0;
+    }
+
+    .sidebar-menu li {
+      margin: 0.5rem 1rem;
+    }
+
+    .sidebar-menu a {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      color: var(--gray-700);
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .sidebar-menu a:hover,
+    .sidebar-menu a.active {
+      background: var(--very-light-blue);
+      color: var(--primary-blue);
+    }
+
+    .sidebar-menu .icon {
+      font-size: 1.2rem;
+      width: 20px;
+      text-align: center;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 0;
+      margin-top: 70px;
+      padding: 2rem;
+      transition: margin-left 0.3s ease;
+      min-height: calc(100vh - 70px);
+    }
+
+    .main-content.shifted {
+      margin-left: 250px;
+    }
+
+    .page-header {
+      margin-bottom: 2rem;
+    }
+
+    .page-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--dark-blue);
+      margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+      color: var(--gray-600);
+      font-size: 1.1rem;
+    }
+
+    /* Content Sections */
+    .content-section {
+      display: none;
+    }
+
+    .content-section.active {
+      display: block;
+    }
+
+    /* Dashboard Cards */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .dashboard-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--gray-200);
+      transition: all 0.3s ease;
+    }
+
+    .dashboard-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--dark-blue);
+    }
+
+    .card-icon {
+      font-size: 1.5rem;
+      color: var(--primary-blue);
+    }
+
+    /* Hospital Cards */
+    .hospital-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 2rem;
+    }
+
+    .hospital-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--gray-200);
+      transition: all 0.3s ease;
+    }
+
+    .hospital-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .hospital-header {
+      margin-bottom: 1.5rem;
+    }
+
+    .hospital-name {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--dark-blue);
+      margin-bottom: 0.5rem;
+    }
+
+    .hospital-location {
+      color: var(--gray-600);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .availability-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .availability-item {
+      text-align: center;
+      padding: 1rem;
+      background: var(--gray-50);
+      border-radius: 8px;
+    }
+
+    .availability-number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-blue);
+      display: block;
+    }
+
+    .availability-label {
+      color: var(--gray-600);
+      font-size: 0.9rem;
+      margin-top: 0.25rem;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background: var(--primary-blue);
+      color: var(--white);
+    }
+
+    .btn-primary:hover {
+      background: var(--dark-blue);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--gray-100);
+      color: var(--gray-700);
+    }
+
+    .btn-secondary:hover {
+      background: var(--gray-200);
+    }
+
+    /* Medical Records */
+    .records-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .record-item {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .record-item:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .record-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .record-date {
+      font-weight: 600;
+      color: var(--dark-blue);
+    }
+
+    .record-type {
+      background: var(--light-blue);
+      color: var(--primary-blue);
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .record-details {
+      color: var(--gray-600);
+      line-height: 1.5;
+    }
+
+    /* Appointments */
+    .appointment-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .appointment-item {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      padding: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    .appointment-item:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .appointment-info h4 {
+      color: var(--dark-blue);
+      margin-bottom: 0.5rem;
+    }
+
+    .appointment-time {
+      color: var(--gray-600);
+      font-size: 0.9rem;
+    }
+
+    .appointment-status {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 0.8rem;
+    }
+
+    .status-upcoming {
+      background: var(--light-blue);
+      color: var(--primary-blue);
+    }
+
+    .status-completed {
+      background: #dcfce7;
+      color: #16a34a;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header {
+        padding: 0 1rem;
+      }
+
+      .main-content {
+        padding: 1rem;
+      }
+
+      .main-content.shifted {
+        margin-left: 0;
+      }
+
+      .sidebar {
+        width: 100%;
+        left: -100%;
+      }
+
+      .sidebar.active {
+        left: 0;
+      }
+
+      .hospital-grid,
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .availability-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Overlay for mobile sidebar */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 998;
+      display: none;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+    .popup-container {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.popup-box {
+  background: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  position: relative;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  animation: popIn 0.3s ease-out;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px; right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <button class="menu-toggle" id="menuToggle">
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </button>
+      <div class="logo">
+        <img src="https://i.postimg.cc/pTnTGXv4/De-Watermark-ai-1748085636012.png" alt="HealthSaathi Logo" class="brand-logo" />
+        <span>HealthSaathi</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="user-profile">
+        <div class="user-avatar">JD</div>
+        <span>John Doe</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu">
+      <li>
+        <a href="#" onclick="showSection('dashboard')" class="menu-item active">
+          <span class="icon">🏠</span>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" onclick="showSection('hospitals')" class="menu-item">
+          <span class="icon">🏥</span>
+          <span>Find Hospitals</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" onclick="showSection('records')" class="menu-item">
+          <span class="icon">📋</span>
+          <span>Medical Records</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" onclick="showSection('logout')" class="menu-item">
+          <span class="icon">🚪</span>
+          <span>Logout</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Overlay for mobile -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Main Content -->
+  <main class="main-content" id="mainContent">
+    <!-- Dashboard Section -->
+    <section id="dashboard" class="content-section active">
+      <div class="page-header">
+        <h1 class="page-title">Dashboard</h1>
+        <p class="page-subtitle">Welcome back! Here's your health overview.</p>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="dashboard-card">
+          <div class="card-header">
+            <h3 class="card-title">Previous Appointments</h3>
+            <span class="card-icon">📅</span>
+          </div>
+          <div class="appointment-list">
+            <div class="appointment-item">
+              <div class="appointment-info">
+                <h4>Dr. Sarah Wilson - Cardiology</h4>
+                <p class="appointment-time">January 15, 2025 - 2:30 PM</p>
+              </div>
+              <span class="appointment-status status-completed">Completed</span>
+            </div>
+            <div class="appointment-item">
+              <div class="appointment-info">
+                <h4>Dr. Michael Chen - General Medicine</h4>
+                <p class="appointment-time">January 8, 2025 - 10:00 AM</p>
+              </div>
+              <span class="appointment-status status-completed">Completed</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="card-header">
+            <h3 class="card-title">Upcoming Appointments</h3>
+            <span class="card-icon">⏰</span>
+          </div>
+          <div class="appointment-list">
+            <div class="appointment-item">
+              <div class="appointment-info">
+                <h4>Dr. Emily Rodriguez - Dermatology</h4>
+                <p class="appointment-time">May 28, 2025 - 11:30 AM</p>
+              </div>
+              <span class="appointment-status status-upcoming">Upcoming</span>
+            </div>
+            <div class="appointment-item">
+              <div class="appointment-info">
+                <h4>Dr. James Thompson - Orthopedics</h4>
+                <p class="appointment-time">June 2, 2025 - 3:00 PM</p>
+              </div>
+              <span class="appointment-status status-upcoming">Upcoming</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Find Hospitals Section -->
+    <section id="hospitals" class="content-section">
+      <div class="page-header">
+        <h1 class="page-title">Find Hospitals</h1>
+        <p class="page-subtitle">Discover nearby hospitals with real-time availability information.</p>
+      </div>
+
+      <div class="hospital-grid">
+        <div class="hospital-card">
+          <div class="hospital-header">
+            <h3 class="hospital-name">CityCare Medical Center</h3>
+            <p class="hospital-location">
+              <span>📍</span>
+              123 Healthcare Avenue, Downtown District
+            </p>
+          </div>
+          <div class="availability-grid">
+            <div class="availability-item">
+              <span class="availability-number">15</span>
+              <span class="availability-label">Oxygen Beds</span>
+            </div>
+            <div class="availability-item">
+              <span class="availability-number">8</span>
+              <span class="availability-label">General Beds</span>
+            </div>
+            <div class="availability-item">
+              <span class="availability-number">3</span>
+              <span class="availability-label">ICU Beds</span>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="bookAppointment('CityCare Medical Center')">
+            Book Appointment
+          </button>
+        </div>
+
+        <div class="hospital-card">
+          <div class="hospital-header">
+            <h3 class="hospital-name">Metro General Hospital</h3>
+            <p class="hospital-location">
+              <span>📍</span>
+              456 Medical Street, Central City
+            </p>
+          </div>
+          <div class="availability-grid">
+            <div class="availability-item">
+              <span class="availability-number">22</span>
+              <span class="availability-label">Oxygen Beds</span>
+            </div>
+            <div class="availability-item">
+              <span class="availability-number">12</span>
+              <span class="availability-label">General Beds</span>
+            </div>
+            <div class="availability-item">
+              <span class="availability-number">6</span>
+              <span class="availability-label">ICU Beds</span>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="bookAppointment('Metro General Hospital')">
+            Book Appointment
+          </button>
+        </div>
+
+        <div class="hospital-card">
+          <div class="hospital-header">
+            <h3 class="hospital-name">Sunrise Health Clinics</h3>
+            <p class="hospital-location">
+              <span>📍</span>
+              789 Wellness Boulevard, East Side
+            </p>
+          </div>
+          <div class="availability-grid">
+            <div class="availability-item">
+              <span class="availability-number">18</span>
+              <span class="availability-label">Oxygen Beds</span>
+            </div>
+            <div class="availability-item">
+              <span class="availability-number">10</span>
+              <span class="availability-label">General Beds</span>
+            </div>
+            <div class="availability-item">
+              <span class="availability-number">4</span>
+              <span class="availability-label">ICU Beds</span>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="bookAppointment('Sunrise Health Clinics')">
+            Book Appointment
+          </button>
+        </div>
+
+        <div class="hospital-card">
+          <div class="hospital-header">
+            <h3 class="hospital-name">Advanced Care Institute</h3>
+            <p class="hospital-location">
+              <span>📍</span>
+              321 Innovation Drive, Tech District
+            </p>
+          </div>
+          <div class="availability-grid">
+            <div class="availability-item">
+              <span class="availability-number">25</span>
+              <span class="availability-label">Oxygen Beds</span>
+            </div>
+            <div class="availability-item">
+              <span class="availability-number">16</span>
+              <span class="availability-label">General Beds</span>
+            </div>
+            <div class="availability-item">
+              <span class="availability-number">8</span>
+              <span class="availability-label">ICU Beds</span>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="bookAppointment('Advanced Care Institute')">
+            Book Appointment
+          </button>
+        </div>
+
+        <div class="hospital-card">
+          <div class="hospital-header">
+            <h3 class="hospital-name">Community Health Network</h3>
+            <p class="hospital-location">
+              <span>📍</span>
+              654 Community Lane, Suburban Area
+            </p>
+          </div>
+          <div class="availability-grid">
+            <div class="availability-item">
+              <span class="availability-number">12</span>
+              <span class="availability-label">Oxygen Beds</span>
+            </div>
+            <div class="availability-item">
+              <span class="availability-number">7</span>
+              <span class="availability-label">General Beds</span>
+            </div>
+            <div class="availability-item">
+              <span class="availability-number">2</span>
+              <span class="availability-label">ICU Beds</span>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="openPopup()">
+            Book Appointment
+          </button>
+          <div id="popupContainer" class="popup-container">
+  <div class="popup-box">
+    <span class="close-btn" onclick="closePopup()">&times;</span>
+    <h2>Book Appointment</h2>
+    <form id="appointmentForm" onsubmit="sendEmail(event)">
+  <label for="name">Your Name:</label>
+  <input type="text" id="name" name="name" required />
+
+  <label for="email">Your Email:</label>
+  <input type="email" id="email" name="email" required />
+
+  <label for="doctorType">Doctor Type:</label>
+  <select id="doctorType" name="doctorType" required>
+    <option value="">Select Type</option>
+    <option value="Cardiologist">Cardiologist</option>
+    <option value="Dermatologist">Dermatologist</option>
+    <option value="Neurologist">Neurologist</option>
+  </select>
+
+  <label for="doctorName">Doctor Name:</label>
+  <input type="text" id="doctorName" name="doctorName" required />
+
+  <label for="timeSlot">Time Slot:</label>
+  <input type="time" id="timeSlot" name="timeSlot" required />
+
+  <button type="submit">Confirm Appointment</button>
+</form>
+
+  </div>
+</div>
+        </div>
+      </div>
+    </section>
+    <section id="records" class="content-section">
+      <div class="page-header">
+        <h1 class="page-title">Medical Records</h1>
+        <p class="page-subtitle">Your complete medical history and health records.</p>
+      </div>
+
+      <div class="records-list">
+        <div class="record-item">
+          <div class="record-header">
+            <h4 class="record-date">January 15, 2025</h4>
+            <span class="record-type">Cardiology Consultation</span>
+          </div>
+          <div class="record-details">
+            <p><strong>Doctor:</strong> Dr. Sarah Wilson</p>
+            <p><strong>Diagnosis:</strong> Routine cardiac screening - Normal results</p>
+            <p><strong>Prescription:</strong> Continue current medication regimen</p>
+            <p><strong>Next Visit:</strong> 6 months follow-up recommended</p>
+          </div>
+        </div>
+
+        <div class="record-item">
+          <div class="record-header">
+            <h4 class="record-date">January 8, 2025</h4>
+            <span class="record-type">General Checkup</span>
+          </div>
+          <div class="record-details">
+            <p><strong>Doctor:</strong> Dr. Michael Chen</p>
+            <p><strong>Diagnosis:</strong> Annual physical examination - All vitals normal</p>
+            <p><strong>Lab Results:</strong> Blood work within normal ranges</p>
+            <p><strong>Recommendations:</strong> Maintain healthy lifestyle, regular exercise</p>
+          </div>
+        </div>
+
+        <div class="record-item">
+          <div class="record-header">
+            <h4 class="record-date">December 20, 2024</h4>
+            <span class="record-type">Vaccination</span>
+          </div>
+          <div class="record-details">
+            <p><strong>Vaccine:</strong> Annual Flu Vaccination</p>
+            <p><strong>Administered by:</strong> Nurse Patricia Johnson</p>
+            <p><strong>Side Effects:</strong> None reported</p>
+            <p><strong>Next Due:</strong> December 2025</p>
+          </div>
+        </div>
+
+        <div class="record-item">
+          <div class="record-header">
+            <h4 class="record-date">November 15, 2024</h4>
+            <span class="record-type">Diagnostic Test</span>
+          </div>
+          <div class="record-details">
+            <p><strong>Test:</strong> Complete Blood Count (CBC)</p>
+            <p><strong>Ordered by:</strong> Dr. Michael Chen</p>
+            <p><strong>Results:</strong> All parameters within normal limits</p>
+            <p><strong>Notes:</strong> No follow-up required</p>
+          </div>
+        </div>
+
+        <div class="record-item">
+          <div class="record-header">
+            <h4 class="record-date">October 5, 2024</h4>
+            <span class="record-type">Emergency Visit</span>
+          </div>
+          <div class="record-details">
+            <p><strong>Chief Complaint:</strong> Minor laceration - left hand</p>
+            <p><strong>Treatment:</strong> Wound cleaning and suturing</p>
+            <p><strong>Attending:</strong> Dr. Alex Rodriguez</p>
+            <p><strong>Discharge:</strong> Same day with wound care instructions</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <script>
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('mainContent');
+    const overlay = document.getElementById('overlay');
+
+    menuToggle.addEventListener('click', function() {
+      sidebar.classList.toggle('active');
+      overlay.classList.toggle('active');
+      
+      if (window.innerWidth > 768) {
+        mainContent.classList.toggle('shifted');
+      }
+    });
+    overlay.addEventListener('click', function() {
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+      mainContent.classList.remove('shifted');
+    });
+    function showSection(sectionName) {
+      const sections = document.querySelectorAll('.content-section');
+      sections.forEach(section => {
+        section.classList.remove('active');
+      });
+      const menuItems = document.querySelectorAll('.menu-item');
+      menuItems.forEach(item => {
+        item.classList.remove('active');
+      });
+      if (sectionName === 'logout') {
+        if (confirm('Are you sure you want to logout?')) {
+          alert('Logged out successfully!');
+          window.location.href = 'index.html';
+        }
+        return;
+      }
+
+      document.getElementById(sectionName).classList.add('active');
+      
+      event.target.closest('.menu-item').classList.add('active');
+      if (window.innerWidth <= 768) {
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+      }
+    }
+    function bookAppointment(hospitalName) {
+      alert(`Booking appointment at ${hospitalName}. You will be redirected to the appointment booking system.`);
+    }
+    window.addEventListener('resize', function() {
+      if (window.innerWidth > 768) {
+        overlay.classList.remove('active');
+      } else {
+        mainContent.classList.remove('shifted');
+      }
+    });
+  </script>
+</body>
+</html>

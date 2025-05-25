@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ambulance SOS</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚑</text></svg>">
+    <style>
+        :root {
+                --primary-blue: #0066cc;
+                --secondary-blue: #4a90e2;
+                --light-blue: #e6f3ff;
+                --very-light-blue: #f0f8ff;
+                --dark-blue: #003d7a;
+                --navy-blue: #1e3a8a;
+                --white: #ffffff;
+                --gray-200: #e2e8f0;
+                --gray-700: #334155;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: 'Inter', sans-serif;
+                line-height: 1.6;
+                background: var(--white);
+                color: var(--gray-700);
+            }
+
+            /* Header Styles */
+            header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1000;
+                padding: 1rem 2rem;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+                border-bottom: 1px solid var(--gray-200);
+            }
+
+            .nav-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                max-width: 1200px;
+                margin: 10px auto;
+            }
+
+            .logo {
+                font-size: 1.8rem;
+                font-weight: 700;
+                color: var(--primary-blue);
+            }
+
+            nav {
+                display: flex;
+                gap: 2rem;
+                align-items: center;
+            }
+
+            nav a {
+                color: var(--gray-700);
+                text-decoration: none;
+                font-weight: 500;
+                transition: all 0.3s ease;
+                padding: 0.5rem 1rem;
+                border-radius: 6px;
+            }
+
+            nav a:hover {
+                color: var(--primary-blue);
+                background: var(--very-light-blue);
+            }
+
+            /* Footer Styles */
+            footer {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+                background: var(--dark-blue);
+                color: var(--white);
+                padding: 2rem 1rem;
+                text-align: center;
+            }
+
+            .footer-content {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+
+            .footer-links {
+                display: flex;
+                justify-content: center;
+                gap: 2rem;
+                margin-bottom: 2rem;
+                flex-wrap: wrap;
+            }
+
+            .footer-links a {
+                color: var(--light-blue);
+                text-decoration: none;
+                transition: color 0.3s ease;
+            }
+
+            .footer-links a:hover {
+                color: var(--white);
+            }
+
+            @media (max-width: 768px) {
+                header {
+                    padding: 1rem;
+                }
+
+                .nav-container {
+                    flex-direction: column;
+                    gap: 1rem;
+                }
+
+                nav {
+                    gap: 1rem;
+                }
+            }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            width: 90%;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin: 150px 0;
+        }
+        h1 {
+            color: #0066cc;
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input, select {
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            padding: 12px;
+            margin-top: 20px;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0066cc;
+        }
+        #hospitalList {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        #hospitalList li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #map {
+            width: 100%;
+            height: 400px;
+            margin-top: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .confirm-button {
+            background-color: #0066cc;
+        }
+        .confirm-button:hover {
+            background-color: #4a90e2;
+        }
+        .hidden {
+            display: none;
+        }
+        #hospitalSelect {
+            height: 150px;
+            width: 100%;
+        }
+        .distance-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .emergency-alert {
+            background-color: #93baf1;
+            color: #000000;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: bold;
+        }
+        .logo {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-left: -100px;;
+}
+.brand-logo {
+  height: 50px;
+  width: 50px;
+  margin-right: 10px;
+  object-fit: cover;
+border-radius: 50%;
+}
+    </style>
+</head>
+<body>
+    <header id="navbar">
+  <div class="nav-container">
+    <div class="logo">
+      <img src="https://i.postimg.cc/pTnTGXv4/De-Watermark-ai-1748085636012.png" alt="HealthSaathi Logo" class="brand-logo" />
+      <span>HealthSaathi</span>
+    </div>
+    <nav>
+    </nav>
+  </div>
+</header>
+    <div class="container">
+        <h1>Ambulance SOS</h1>
+        <form id="userForm">
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" required placeholder="Your full name">
+            
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" required placeholder="Your email address">
+            
+            <button type="submit" onclick="sendTestEmail()">Request Emergency Assistance</button>
+        </form>
+        <div id="locationContainer" class="hidden">
+            <h2>Your Current Location</h2>
+            <p id="location">Locating you now...</p>
+            <button id="findHospitals">Find Nearby Hospitals</button>
+        </div>
+        <div id="hospitalContainer" class="hidden">
+            <h2>Select Hospitals</h2>
+            <p>Please select one or more hospitals from the list below:</p>
+            <select id="hospitalSelect" multiple></select>
+            <button id="calculateDistances">Calculate Distances</button>
+        </div>
+        <div id="distanceContainer" class="hidden">
+            <h2>Emergency Hospital Information</h2>
+            <div class="emergency-alert">
+                EMERGENCY ASSISTANCE REQUESTED - PLEASE RESPOND IMMEDIATELY
+            </div>
+            <h3>Distances to Hospitals</h3>
+            <ul id="distanceList"></ul>
+            
+            <div id="map"></div>
+            
+            <button id="sendEmail" class="confirm-button">
+                Send Emergency Information to My Email
+            </button>
+        </div>
+    </div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <script>
+(function() {
+    emailjs.init("I9wVpljUf4G77bRa7"); 
+    console.log("EmailJS initialized");
+})();
+let userLatitude = null;
+let userLongitude = null;
+let userAddress = null;
+let hospitals = [];
+let map = null;
+document.getElementById('userForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    if (name && email) {
+        document.getElementById('locationContainer').classList.remove('hidden');
+        document.getElementById('userForm').classList.add('hidden');
+        document.getElementById('location').innerHTML = '<p>Getting your location...</p>';
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    userLatitude = position.coords.latitude;
+                    userLongitude = position.coords.longitude;
+                    getAddressFromCoordinates(userLatitude, userLongitude);
+                },
+                function(error) {
+                    console.error("Geolocation error:", error);
+                    document.getElementById('location').innerHTML = '<p>Location access failed</p>';
+                    alert('Location access was denied or failed. Please enable location services and try again.');
+                    document.getElementById('userForm').classList.remove('hidden');
+                    document.getElementById('locationContainer').classList.add('hidden');
+                },
+                { 
+                    timeout: 10000,
+                    enableHighAccuracy: true 
+                }
+            );
+        } else {
+            alert('Geolocation is not supported by this browser.');
+            document.getElementById('userForm').classList.remove('hidden');
+            document.getElementById('locationContainer').classList.add('hidden');
+        }
+    }
+});
+async function getAddressFromCoordinates(lat, lng) {
+    try {
+        const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=14&addressdetails=1`);
+        const data = await response.json();
+        
+        if (data && data.display_name) {
+            userAddress = data.display_name;
+            const address = data.address || {};
+            let readableAddress = '';
+            if (address.neighbourhood || address.suburb) {
+                readableAddress += `${address.neighbourhood || address.suburb}, `;
+            }
+            if (address.city || address.town || address.village) {
+                readableAddress += `${address.city || address.town || address.village}, `;
+            }
+            if (address.state) {
+                readableAddress += `${address.state}, `;
+            }
+            if (address.country) {
+                readableAddress += `${address.country}`;
+            }
+            document.getElementById('location').innerHTML = `
+                <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; border-left: 4px solid #28a745;">
+                    <h4 style="margin: 0 0 10px 0; color: #155724;">Your Current Location</h4>
+                    <p style="margin: 0; font-weight: 500;">${readableAddress || data.display_name}</p>
+                </div>
+            `;
+        } else {
+            throw new Error('Unable to determine address');
+        }
+    } catch (error) {
+        console.error('Reverse geocoding error:', error);
+        document.getElementById('location').innerHTML = `
+            <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107;">
+                <p style="margin: 0;">Location detected but address unavailable</p>
+            </div>
+        `;
+    }
+}
+document.getElementById('findHospitals').addEventListener('click', function() {
+    if (userLatitude && userLongitude) {
+        document.getElementById('locationContainer').classList.add('hidden');
+        const hospitalSelect = document.getElementById('hospitalSelect');
+        hospitalSelect.innerHTML = '<option> Searching for nearby hospitals...</option>';
+        document.getElementById('hospitalContainer').classList.remove('hidden');
+        findNearbyHospitals(userLatitude, userLongitude);
+    } else {
+        alert("Please wait while we determine your location...");
+    }
+});
+async function findNearbyHospitals(lat, lng) {
+    try {
+        console.log(` Searching for real hospitals near coordinates: ${lat}, ${lng}`);
+        const radius = 5000;
+        const query = `
+            [out:json][timeout:25];
+            (
+                node["amenity"="hospital"](around:${radius},${lat},${lng});
+                way["amenity"="hospital"](around:${radius},${lat},${lng});
+                relation["amenity"="hospital"](around:${radius},${lat},${lng});
+                node["amenity"="clinic"]["emergency"="yes"](around:${radius},${lat},${lng});
+                node["healthcare"="hospital"](around:${radius},${lat},${lng});
+                way["healthcare"="hospital"](around:${radius},${lat},${lng});
+            );
+            out center meta;
+        `;
+        
+        console.log(" Fetching real hospital data from Overpass API...");
+        
+        const response = await fetch('https://overpass-api.de/api/interpreter', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain',
+            },
+            body: query
+        });
+        
+        if (!response.ok) {
+            throw new Error(`API request failed: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log(`Found ${data.elements ? data.elements.length : 0} medical facilities`);
+        
+        if (data.elements && data.elements.length > 0) {
+            hospitals = [];
+            
+            data.elements.forEach(element => {
+                let hospitalLat, hospitalLng;
+                
+                if (element.lat && element.lon) {
+                    hospitalLat = element.lat;
+                    hospitalLng = element.lon;
+                } else if (element.center) {
+                    hospitalLat = element.center.lat;
+                    hospitalLng = element.center.lon;
+                } else {
+                    return;
+                }
+                const tags = element.tags || {};
+                const name = tags.name || tags['name:en'] || tags.brand || 'Medical Facility';
+                const addressParts = [
+                    tags['addr:housenumber'],
+                    tags['addr:street'],
+                    tags['addr:neighbourhood'] || tags['addr:suburb'],
+                    tags['addr:city'] || tags['addr:town'],
+                    tags['addr:state'] || tags['addr:province'],
+                    tags['addr:postcode']
+                ].filter(Boolean);
+                const address = addressParts.length > 0 ? addressParts.join(', ') : 'Address being verified...';
+                const phone = tags.phone || tags['contact:phone'] || tags['phone:emergency'] || 'Contact hospital directly';
+                const emergency = tags['emergency'] || tags['emergency:hospital'] || tags['healthcare:speciality'];
+                const website = tags.website || tags['contact:website'] || '';
+                const distance = calculateDistance(lat, lng, hospitalLat, hospitalLng);
+                if (distance <= 10) { 
+                    hospitals.push({
+                        name: name,
+                        coordinates: { lat: hospitalLat, lng: hospitalLng },
+                        address: address,
+                        phone: phone,
+                        distance: distance,
+                        emergency: emergency,
+                        website: website,
+                        type: tags.amenity || tags.healthcare || 'medical'
+                    });
+                }
+            });
+            if (hospitals.length > 0) {
+                hospitals.sort((a, b) => a.distance - b.distance);
+                
+                hospitals = hospitals.slice(0, 15);
+            
+                console.log(` Successfully found ${hospitals.length} nearby hospitals`);
+                displayHospitals();
+            } else {
+                console.log(" No hospitals found within 10km radius");
+                throw new Error('No hospitals found in area');
+            }
+        } else {
+            throw new Error('No medical facilities found in the area');
+        }
+    } catch (error) {
+        console.error(' Error finding real hospitals:', error);
+        console.log(" Switching to fallback mode...");
+        useFallbackHospitals(lat, lng);
+    }
+}
+function displayHospitals() {
+    const hospitalSelect = document.getElementById('hospitalSelect');
+    hospitalSelect.innerHTML = '';
+    
+    if (hospitals.length === 0) {
+        hospitalSelect.innerHTML = '<option>No hospitals found nearby</option>';
+        return;
+    }
+    
+    hospitals.forEach((hospital, index) => {
+        const option = document.createElement('option');
+        option.value = JSON.stringify({
+            name: hospital.name,
+            address: hospital.address,
+            phone: hospital.phone,
+            lat: hospital.coordinates.lat,
+            lng: hospital.coordinates.lng,
+            distance: hospital.distance
+        });
+        
+        const emergencyInfo = hospital.emergency ? ' (Emergency Services)' : '';
+        option.textContent = `${hospital.name} - ${hospital.distance.toFixed(1)} km${emergencyInfo}`;
+        hospitalSelect.appendChild(option);
+    });
+    const instructionOption = document.createElement('option');
+    instructionOption.value = '';
+    instructionOption.textContent = '--- Select hospitals to calculate distances ---';
+    instructionOption.disabled = true;
+    hospitalSelect.insertBefore(instructionOption, hospitalSelect.firstChild);
+}
+function useFallbackHospitals(lat, lng) {
+    console.log(" FALLBACK MODE: Real hospital data unavailable, using backup data");
+    const hospitalSelect = document.getElementById('hospitalSelect');
+    hospitalSelect.innerHTML = '<option style="color: #856404; background: #fff3cd;">Using backup hospital data - Real data unavailable</option>';
+    hospitals = [
+        { 
+            name: 'Emergency Hospital (Backup Data)', 
+            coordinates: { lat: lat + 0.01, lng: lng + 0.01 },
+            address: 'Nearest Medical Center - Contact local emergency services',
+            phone: 'Call 911 or local emergency number',
+            distance: calculateDistance(lat, lng, lat + 0.01, lng + 0.01)
+        },
+        { 
+            name: 'Regional Hospital (Backup Data)', 
+            coordinates: { lat: lat - 0.01, lng: lng - 0.01 },
+            address: 'Secondary Medical Facility - Contact emergency services',
+            phone: 'Call 911 or local emergency number',
+            distance: calculateDistance(lat, lng, lat - 0.01, lng - 0.01)
+        }
+    ];
+    hospitals.sort((a, b) => a.distance - b.distance);
+    displayHospitals();
+    alert(" Unable to fetch real hospital data. Showing backup locations. Please call emergency services directly for immediate help.");
+}
+document.getElementById('calculateDistances').addEventListener('click', function() {
+    const selectedOptions = Array.from(document.getElementById('hospitalSelect').selectedOptions);
+    if (selectedOptions.length === 0) {
+        alert("Please select at least one hospital.");
+        return;
+    }
+    const distanceList = document.getElementById('distanceList');
+    distanceList.innerHTML = '';
+    const selectedHospitals = selectedOptions.map(option => JSON.parse(option.value))
+                                           .sort((a, b) => a.distance - b.distance);
+
+    selectedHospitals.forEach((hospital, index) => {
+        const li = document.createElement('li');
+        li.className = 'distance-item';
+        const priorityLabel = index === 0 ? '<span style="background: #28a745; color: white; padding: 2px 6px; border-radius: 12px; font-size: 12px; margin-left: 8px;">CLOSEST</span>' : '';
+        li.innerHTML = `
+            <div style="border: 1px solid #ddd; padding: 12px; border-radius: 8px; margin-bottom: 10px; background: ${index === 0 ? '#f8fff8' : 'white'};">
+                <strong>${hospital.name}</strong>${priorityLabel}<br>
+                <small style="color: #666;">${hospital.address}</small><br>
+                <strong style="color: #d9534f;">Distance:</strong> ${hospital.distance.toFixed(2)} km<br>
+                <strong>Phone:</strong> ${hospital.phone}
+            </div>
+        `;
+        distanceList.appendChild(li);
+    });
+    document.getElementById('distanceContainer').classList.remove('hidden');
+    document.getElementById('hospitalContainer').classList.add('hidden');
+    initializeMap(userLatitude, userLongitude, selectedOptions);
+});
+document.getElementById('sendEmail').addEventListener('click', function() {
+    const selectedOptions = Array.from(document.getElementById('hospitalSelect').selectedOptions);
+
+    if(selectedOptions.length === 0) {
+        alert('Please select at least one hospital before sending the email.');
+        return;
+    }
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const selectedHospitals = Array.from(selectedOptions).map(option => {
+        const hospital = JSON.parse(option.value);
+        return `${hospital.name} (${hospital.distance.toFixed(2)} km) - ${hospital.address}, Phone: ${hospital.phone}`;
+    });
+    const hospitalsInfoText = selectedHospitals.join('\n');
+
+    const templateParams = {
+        email: email,
+        to_name: name,
+        name: name,
+        user_location: userAddress || `Lat: ${userLatitude.toFixed(6)}, Lng: ${userLongitude.toFixed(6)}`,
+        time: new Date().toLocaleString(),
+        hospitals_info: hospitalsInfoText,
+    };
+    console.log("Sending email with params:", templateParams);
+
+    emailjs.send('service_6ch22yu', 'template_bdtizbt', templateParams)
+        .then(function(response) {
+            console.log('Email sent successfully:', response);
+            alert('Emergency information has been sent to your email! Help is on the way!');
+            
+            // Reset the form
+            document.getElementById('userForm').reset();
+            document.getElementById('userForm').classList.remove('hidden');
+            document.getElementById('distanceContainer').classList.add('hidden');
+            const hospitalSelect = document.getElementById('hospitalSelect');
+            Array.from(hospitalSelect.options).forEach(option => option.selected = false);
+
+        }, function(error) {
+            console.error('Failed to send email:', error);
+            alert('Failed to send emergency information. Error: ' + error.text + '\nPlease try again or call emergency services directly.');
+        });
+        sendAlert();
+});
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+        Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+}
+function initializeMap(latitude, longitude, selectedOptions) {
+    if (map) {
+        map.remove();
+    }
+    
+    document.getElementById("map").innerHTML = "";
+    map = L.map('map').setView([latitude, longitude], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    L.marker([latitude, longitude], {
+        icon: L.divIcon({
+            className: 'user-location-marker',
+            html: '📍',
+            iconSize: [30, 30]
+        })
+    }).addTo(map)
+    .bindPopup(`<b>Your Location</b><br>${userAddress || 'Current Position'}`)
+    .openPopup();
+    selectedOptions.forEach((option, index) => {
+        const hospital = JSON.parse(option.value);
+        const colors = ['#d9534f', '#5bc0de', '#f0ad4e', '#5cb85c', '#337ab7'];
+        const color = colors[index % colors.length];
+        
+        // Add hospital marker
+        L.marker([hospital.lat, hospital.lng], {
+            icon: L.divIcon({
+                className: 'hospital-marker',
+                html: `<div style="background: ${color}; color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: 16px;"></div>`,
+                iconSize: [30, 30]
+            })
+        }).addTo(map)
+        .bindPopup(`
+            <b>${hospital.name}</b><br>
+            ${hospital.address}<br>
+            <strong>Distance:</strong> ${hospital.distance.toFixed(2)} km<br>
+            <strong>Phone:</strong> ${hospital.phone}
+        `);
+        
+        // Add route line
+        L.polyline(
+            [
+                [latitude, longitude],
+                [hospital.lat, hospital.lng]
+            ],
+            {
+                color: color,
+                weight: 3,
+                dashArray: '5, 5',
+                opacity: 0.7
+            }
+        ).addTo(map)
+        .bindPopup(`Route to ${hospital.name}<br>Distance: ${hospital.distance.toFixed(2)} km`);
+    });
+    
+    // Fit map to show all markers
+    const group = new L.featureGroup();
+    group.addLayer(L.marker([latitude, longitude]));
+    selectedOptions.forEach(option => {
+        const hospital = JSON.parse(option.value);
+        group.addLayer(L.marker([hospital.lat, hospital.lng]));
+    });
+    map.fitBounds(group.getBounds().pad(0.1));
+}
+    document.addEventListener('DOMContentLoaded', function() {
+      const navbar = document.getElementById("navbar");
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 50) {
+          navbar.classList.add("scrolled");
+        } else {
+          navbar.classList.remove("scrolled");
+        }
+      });
+
+      // Smooth scrolling for navigation links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, observerOptions);
+      document.querySelectorAll('.fade-in').forEach(el => {
+        observer.observe(el);
+      });
+      function animateCounter(element, target, duration = 2000) {
+        let start = 0;
+        const increment = target / (duration / 16);
+        function updateCounter() {
+          start += increment;
+          element.textContent = Math.floor(start);
+          if (start < target) {
+            requestAnimationFrame(updateCounter);
+          } else {
+            element.textContent = target;
+          }
+        }
+
+        updateCounter();
+      }
+      const statObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const counter = entry.target.querySelector('.stat-number');
+            if (counter) {
+              const target = parseInt(counter.getAttribute('data-target'));
+              if (!isNaN(target)) {
+                animateCounter(counter, target);
+              }
+            }
+            statObserver.unobserve(entry.target);
+          }
+        });
+      });
+
+      document.querySelectorAll('.stat-item').forEach(el => {
+        statObserver.observe(el);
+      });
+      window.initiateEmergency = function() {
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(220, 38, 38, 0.95);
+          z-index: 10000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          backdrop-filter: blur(5px);
+        `;
+
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+          background: white;
+          padding: 3rem;
+          border-radius: 12px;
+          text-align: center;
+          max-width: 400px;
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        `;
+
+        const message = document.createElement('p');
+        message.textContent = "An emergency has been initiated. Please Book an Ambulance.";
+        modal.appendChild(message);
+
+        const closeButton = document.createElement('button');
+        closeButton.textContent = "Book";
+        closeButton.style.cssText = `
+          margin-top: 1rem;
+          padding: 0.5rem 1rem;
+          background: #007bff;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+        `;
+        closeButton.addEventListener('click', () => {
+          window.location.href = 'x.html';
+        });
+
+        modal.appendChild(closeButton);
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+      }
+    });
+    function sendAlert() {
+    fetch("http://localhost:8000/send-alert", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Failed to send SMS alert");
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log("SMS alert sent:", data);
+    })
+    .catch(error => {
+        console.error("Error sending SMS alert:", error);
+        alert("Could not send SMS alert. Please check backend or network.");
+    });
+}
+    </script>
+</body>
+</html>

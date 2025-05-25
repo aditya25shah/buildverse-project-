@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title> HealthSaathi </title>
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/pTnTGXv4/De-Watermark-ai-1748085636012.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-blue: #0066cc;
+      --secondary-blue: #4a90e2;
+      --light-blue: #e6f3ff;
+      --very-light-blue: #f0f8ff;
+      --dark-blue: #003d7a;
+      --navy-blue: #1e3a8a;
+      --white: #ffffff;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1e293b;
+      --success-green: #10b981;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      background: var(--white);
+      color: var(--gray-700);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 1rem 2rem;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--gray-200);
+      transition: all 0.3s ease;
+    }
+
+    header.scrolled {
+      padding: 0.75rem 2rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary-blue);
+    }
+
+    nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    nav a {
+      color: var(--gray-700);
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      transition: all 0.3s ease;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+    }
+
+    nav a:hover {
+      color: var(--primary-blue);
+      background: var(--very-light-blue);
+    }
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--very-light-blue) 0%, var(--light-blue) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?auto=format&fit=crop&w=2000&q=80') center/cover;
+      opacity: 0.05;
+      z-index: 1;
+    }
+
+    .hero-content {
+      text-align: center;
+      z-index: 2;
+      position: relative;
+      max-width: 800px;
+      padding: 0 2rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: var(--dark-blue);
+      animation: slideInUp 1s ease-out;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+      color: var(--gray-600);
+      animation: slideInUp 1s ease-out 0.2s both;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: slideInUp 1s ease-out 0.4s both;
+    }
+
+    .btn {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background: var(--primary-blue);
+      color: var(--white);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-primary:hover {
+      background: var(--dark-blue);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn-secondary {
+      background: var(--white);
+      color: var(--primary-blue);
+      border: 2px solid var(--primary-blue);
+    }
+
+    .btn-secondary:hover {
+      background: var(--primary-blue);
+      color: var(--white);
+      transform: translateY(-2px);
+    }
+
+    /* Stats Section */
+    .stats {
+      padding: 4rem 2rem;
+      background: var(--white);
+    }
+
+    .stats-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 2rem 1rem;
+      border-radius: 12px;
+      background: var(--very-light-blue);
+      border: 1px solid var(--light-blue);
+      transition: all 0.3s ease;
+    }
+
+    .stat-item:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+      background: var(--light-blue);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-blue);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: var(--gray-600);
+      font-weight: 500;
+    }
+
+    /* Sections */
+    .section {
+      padding: 5rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section:nth-child(even) {
+      background: var(--gray-50);
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .section h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--dark-blue);
+    }
+
+    .section p {
+      font-size: 1.1rem;
+      color: var(--gray-600);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Services Grid */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+    }
+
+    .service-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 2rem;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .service-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-xl);
+      border-color: var(--secondary-blue);
+    }
+
+    .service-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .service-card h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--dark-blue);
+    }
+
+    .service-card p {
+      color: var(--gray-600);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* Partners Grid */
+    .partners-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .partner-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .partner-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--secondary-blue);
+    }
+
+    .partner-logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--secondary-blue), var(--primary-blue));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 1rem auto;
+      color: var(--white);
+    }
+
+    .partner-card h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--dark-blue);
+      margin-bottom: 0.5rem;
+    }
+
+    .partner-type {
+      color: var(--secondary-blue);
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    /* Features Timeline */
+    .features-timeline {
+      padding: 6rem 2rem;
+      background: var(--gray-50);
+    }
+
+    .timeline {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--secondary-blue);
+      transform: translateX(-50%);
+    }
+
+    .timeline-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 4rem;
+      position: relative;
+    }
+
+    .timeline-item:nth-child(even) {
+      flex-direction: row-reverse;
+    }
+
+    .timeline-content {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 2rem;
+      width: 45%;
+      position: relative;
+      box-shadow: var(--shadow-md);
+    }
+
+    .timeline-icon {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px;
+      height: 60px;
+      background: var(--primary-blue);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: var(--white);
+      z-index: 2;
+      border: 4px solid var(--white);
+    }
+
+    /* Login Section */
+    .login-section {
+      background: var(--primary-blue);
+      padding: 4rem 2rem;
+      margin: 4rem 0;
+      text-align: center;
+      color: var(--white);
+    }
+
+    .login-section h2 {
+      color: var(--white);
+      margin-bottom: 1rem;
+    }
+
+    .login-section p {
+      margin-bottom: 2rem;
+      color: var(--light-blue);
+    }
+
+    .login-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .contact-section {
+      background: var(--very-light-blue);
+      padding: 4rem 2rem;
+      margin: 4rem 0;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .contact-item {
+      text-align: center;
+      padding: 2rem;
+      background: var(--white);
+      border-radius: 12px;
+      border: 1px solid var(--gray-200);
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .contact-item:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .contact-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--secondary-blue);
+    }
+
+    .contact-item h3 {
+      color: var(--dark-blue);
+      margin-bottom: 1rem;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--dark-blue);
+      color: var(--white);
+      padding: 3rem 2rem 2rem;
+      text-align: center;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--light-blue);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--white);
+    }
+
+    /* Emergency Button */
+    .emergency-btn {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      background: #dc2626;
+      border: none;
+      border-radius: 50%;
+      color: var(--white);
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: var(--shadow-lg);
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+
+    .emergency-btn:hover {
+      transform: scale(1.1);
+      box-shadow: var(--shadow-xl);
+    }
+
+    /* Animations */
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        padding: 1rem;
+      }
+
+      .nav-container {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      nav {
+        gap: 1rem;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .timeline::before {
+        left: 20px;
+      }
+
+      .timeline-item {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .timeline-content {
+        width: 100%;
+        margin-left: 60px;
+      }
+
+      .timeline-icon {
+        left: 20px;
+      }
+
+      .services-grid,
+      .partners-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+.partner-logo {
+  width: 60%;
+  height: 100px; 
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.partner-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: fit; 
+  display: block;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+.brand-logo {
+  height: 50px;
+  width: 50px;
+  margin-right: 10px;
+  object-fit: cover;
+border-radius: 50%;
+}
+  </style>
+</head>
+<body>
+  <header id="navbar">
+  <div class="nav-container">
+    <div class="logo">
+      <img src="https://i.postimg.cc/pTnTGXv4/De-Watermark-ai-1748085636012.png" alt="HealthSaathi Logo" class="brand-logo" />
+      <span>HealthSaathi</span>
+    </div>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#features">Features</a>
+      <a href="#partners">Partners</a>
+      <a href="#services">Services</a>
+      <a href="/static/login.html">Login/Signup</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Revolutionary Emergency Healthcare Platform</h1>
+      <p>Connecting patients, hospitals, and emergency services through intelligent technology for faster, smarter healthcare delivery when every second counts.</p>
+      <div class="cta-buttons">
+        <a href="/static/login.html" class="btn btn-primary">
+           Get Started
+        </a>
+        <a href="#about" class="btn btn-secondary">
+           Learn More
+        </a>
+      </div>
+    </div>
+  </section>
+  <section class="stats">
+    <div class="stats-container">
+      <div class="stat-item fade-in">
+        <span class="stat-number" >50+</span>
+        <div class="stat-label">Partner Hospitals</div>
+      </div>
+      <div class="stat-item fade-in">
+        <span class="stat-number" >5000+</span>
+        <div class="stat-label">Lives Saved</div>
+      </div>
+      <div class="stat-item fade-in">
+        <span class="stat-number">24/7</span>
+        <div class="stat-label">Emergency Support</div>
+      </div>
+      <div class="stat-item fade-in">
+        <span class="stat-number" >99%</span>
+        <div class="stat-label">System Uptime</div>
+      </div>
+    </div>
+  </section>
+  <section id="about" class="section fade-in">
+    <div class="section-header">
+      <h2>Transforming Emergency Healthcare</h2>
+      <p>We leverage cutting-edge technology, real-time data analytics, and intelligent automation to create seamless connections between patients and life-saving medical resources.</p>
+    </div>
+  </section>
+  <section id="features" class="features-timeline">
+    <div class="section-header fade-in">
+      <h2>How We're Making a Difference</h2>
+      <p>Our platform integrates multiple systems to provide comprehensive emergency healthcare solutions</p>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item fade-in">
+        <div class="timeline-content">
+          <h3> Real-Time Emergency Detection</h3>
+          <p>Advanced algorithms monitor emergency patterns and automatically dispatch resources to high-need areas</p>
+        </div>
+      </div>
+      <div class="timeline-item fade-in">
+        <div class="timeline-content">
+          <h3>Smart Route Optimization</h3>
+          <p> Traffic analysis ensures ambulances take the fastest routes, reducing response times by up to 40%</p>
+        </div>
+      </div>
+      <div class="timeline-item fade-in">
+        <div class="timeline-content">
+          <h3> Predictive Bed Management</h3>
+          <p>Machine learning predicts bed availability and automatically reserves spots for incoming emergencies</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="partners" class="section">
+  <div class="section-header fade-in">
+    <h2>Trusted Healthcare Partners</h2>
+    <p>Working with leading medical institutions to ensure comprehensive coverage</p>
+  </div>
+  <div class="partners-grid">
+    <div class="partner-card fade-in">
+      <div class="partner-logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/8/88/Hospital-de-Bellvitge.jpg" alt="CityCare Logo" />
+      </div>
+      <h3>CityCare Medical Center</h3>
+      <div class="partner-type">Private Healthcare Network</div>
+    </div>
+    <div class="partner-card fade-in">
+      <div class="partner-logo">
+        <img src="https://sugunahospital.com/wp-content/uploads/2024/10/Top-10-Multispeciality-Hospitals-in-Bangalore.jpg" alt="Metro General Logo" />
+      </div>
+      <h3>Metro General Hospital</h3>
+      <div class="partner-type">Government Healthcare Facility</div>
+    </div>
+    <div class="partner-card fade-in">
+      <div class="partner-logo">
+        <img src="https://cdn.britannica.com/12/130512-004-AD0A7CA4/campus-Riverside-Ottawa-The-Hospital-Ont.jpg" alt="Sunrise Health Logo" />
+      </div>
+      <h3>Sunrise Health Clinics</h3>
+      <div class="partner-type">Semi-Government Healthcare</div>
+    </div>
+    <div class="partner-card fade-in">
+      <div class="partner-logo">
+        <img src="https://advinhealthcare.com/wp-content/uploads/2022/12/Types-of-Hospitals-2.jpg" alt="Emergency Air Services Logo" />
+      </div>
+      <h3>Emergency Air Services</h3>
+      <div class="partner-type">Critical Care Transport</div>
+    </div>
+  </div>
+</section>
+  <section id="services" class="section">
+    <div class="section-header fade-in">
+      <h2>Comprehensive Emergency Services</h2>
+      <p>Everything you need for emergency healthcare management in one integrated platform</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card fade-in">
+        <div class="service-icon"></div>
+        <h3>Smart Ambulance Dispatch</h3>
+        <p>Real-time GPS tracking, traffic-aware routing, and automatic hospital coordination for optimal emergency response times.</p>
+      </div>
+      <div class="service-card fade-in">
+        <div class="service-icon"></div>
+        <h3>Real-Time Bed Availability</h3>
+        <p>Live updates on ICU, oxygen, and general ward availability across all partner hospitals with instant booking capabilities.</p>
+      </div>
+      <div class="service-card fade-in">
+        <div class="service-icon"></div>
+        <h3>Blood Bank Network</h3>
+        <p>Comprehensive blood inventory management with compatibility matching and emergency procurement protocols.</p>
+      </div>
+      <div class="service-card fade-in">
+        <div class="service-icon"></div>
+        <h3>Digital Health Records</h3>
+        <p>Secure, instant access to patient medical history, allergies, and critical information for emergency responders.</p>
+      </div>
+    </div>
+  </section>
+  <section id="contact" class="contact-section fade-in">
+    <div class="section-header">
+      <h2>24/7 Emergency Support</h2>
+      <p>Our dedicated team is always ready to assist with your healthcare emergencies</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-item">
+        <div class="contact-icon"></div>
+        <h3>Emergency Hotline</h3>
+        <p><strong>91+ 7386582753</strong><br>Available 24/7 for emergencies</p>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon"></div>
+        <h3>Regional Centers</h3>
+        <p><strong>50+ Locations</strong><br>Nationwide coverage</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+        <a href="/careers">Careers</a>
+        <a href="/press">Press</a>
+      </div>
+      <p>&copy; 2025 HealthSaathi . Revolutionizing emergency healthcare through technology.</p>
+      <p style="margin-top: 1rem; color: var(--light-blue); font-size: 0.9rem;">
+        Trusted by 50+ hospitals • 5,000+ lives saved • 99.9% uptime guarantee
+      </p>
+    </div>
+  </footer>
+
+  <button class="emergency-btn" onclick="redirect()" onclick="initiateEmergency()" title="Emergency Services"> SOS
+  </button>
+
+  <script>
+const navbar = document.getElementById("navbar");
+window.addEventListener("scroll", () => {
+  if (window.scrollY > 50) {
+    navbar.classList.add("scrolled");
+  } else {
+    navbar.classList.remove("scrolled");
+  }
+});
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  });
+});
+const observerOptions = {
+  threshold: 0.1,
+  rootMargin: '0px 0px -50px 0px'
+};
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, observerOptions);
+document.querySelectorAll('.fade-in').forEach(el => {
+  observer.observe(el);
+});
+function animateCounter(element, target, duration = 2000) {
+  let start = 0;
+  const increment = target / (duration / 16);
+
+  function updateCounter() {
+    start += increment;
+    element.textContent = Math.floor(start);
+
+    if (start < target) {
+      requestAnimationFrame(updateCounter);
+    } else {
+      element.textContent = target;
+    }
+  }
+
+  updateCounter();
+}
+const statObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const counter = entry.target.querySelector('.stat-number');
+      if (counter) {
+        const target = parseInt(counter.getAttribute('data-target'));
+        if (!isNaN(target)) {
+          animateCounter(counter, target);
+        }
+      }
+      statObserver.unobserve(entry.target);
+    }
+  });
+});
+
+document.querySelectorAll('.stat-item').forEach(el => {
+  statObserver.observe(el);
+});
+function initiateEmergency() {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(220, 38, 38, 0.95);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+  `;
+
+  const modal = document.createElement('div');
+  modal.style.cssText = `
+    background: white;
+    padding: 3rem;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 400px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  `;
+
+  const message = document.createElement('p');
+  message.textContent = "An emergency has been initiated. Please Book an Ambulance.";
+  modal.appendChild(message);
+
+  const closeButton = document.createElement('button');
+  closeButton.textContent = "Book";
+  closeButton.style.cssText = `
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  `;
+  modal.appendChild(closeButton);
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+}
+function redirect() {
+  window.location.href = '/static/x.html';
+}
+  </script> 
+</body>
+</html>

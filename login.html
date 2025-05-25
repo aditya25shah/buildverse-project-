@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/pTnTGXv4/De-Watermark-ai-1748085636012.png">
+    <title> HealthSaathi </title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #e8f0fe 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c5aa0;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #2c5aa0;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .auth-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 600px;
+        }
+
+        .auth-form-section {
+            padding: 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .auth-info-section {
+            background: linear-gradient(135deg, #2c5aa0 0%, #1e3a8a 100%);
+            color: white;
+            padding: 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-info-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="1" fill="white" opacity="0.1"/><circle cx="20" cy="80" r="1" fill="white" opacity="0.1"/><circle cx="90" cy="30" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .auth-tabs {
+            display: flex;
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .auth-tab {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #64748b;
+        }
+
+        .auth-tab.active {
+            background: white;
+            color: #2c5aa0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #2c5aa0;
+            box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #2c5aa0 0%, #1e3a8a 100%);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(44, 90, 160, 0.3);
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .forgot-password a {
+            color: #2c5aa0;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .info-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .info-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .info-description {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .info-features {
+            list-style: none;
+        }
+
+        .info-features li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .info-features li::before {
+            content: '✓';
+            background: rgba(255,255,255,0.2);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .auth-container {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+            }
+
+            .auth-info-section {
+                order: -1;
+                padding: 2rem 1.5rem;
+            }
+
+            .auth-form-section {
+                padding: 2rem 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .header {
+                padding: 1rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .auth-container {
+            animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <main class="main-content">
+        <div class="auth-container">
+            <div class="auth-form-section">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" onclick="switchTab('user-login')">User Login</button>
+                    <button class="auth-tab" onclick="switchTab('hospital-login')">Hospital Login</button>
+                    <button class="auth-tab" onclick="switchTab('signup')">Sign Up</button>
+                </div>
+                <form id="user-login-form" class="auth-form">
+                    <h3 style="margin-bottom: 1.5rem; color: #2c5aa0; font-size: 1.25rem;">Patient Login</h3>
+                    <div class="form-group">
+                        <label for="user-email">Email Address</label>
+                        <input type="email" id="user-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="user-password">Password</label>
+                        <input type="password" id="user-password" name="password" required>
+                    </div>
+                    <button type="submit" class="submit-btn" >Sign In as Patient</button>
+                    <div class="forgot-password">
+                        <a href="#forgot">Forgot your password?</a>
+                    </div>
+                </form>
+                <form id="hospital-login-form" class="auth-form hidden">
+                    <h3 style="margin-bottom: 1.5rem; color: #2c5aa0; font-size: 1.25rem;">Hospital Login</h3>
+                    <div class="form-group">
+                        <label for="hospital-id">Hospital ID / License Number</label>
+                        <input type="text" id="hospital-id" name="hospital-id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="hospital-email">Official Email Address</label>
+                        <input type="email" id="hospital-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="hospital-password">Password</label>
+                        <input type="password" id="hospital-password" name="password" required>
+                    </div>
+                    <button type="submit" class="submit-btn" >Sign In as Hospital</button>
+                    <div class="forgot-password">
+                        <a href="#forgot">Forgot your password?</a>
+                    </div>
+                </form>
+                <form id="signup-form" class="auth-form hidden">
+                    <div class="signup-type-selector" style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; color: #374151; font-weight: 600;">I want to register as:</label>
+                        <div style="display: flex; gap: 1rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="radio" name="signup-type" value="user" checked onchange="toggleSignupForm()">
+                                <span>Patient/User</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="radio" name="signup-type" value="hospital" onchange="toggleSignupForm()">
+                                <span>Hospital/Healthcare Provider</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div id="user-signup-fields">
+                        <div class="form-group">
+                            <label for="signup-name">Full Name</label>
+                            <input type="text" id="signup-name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-email">Email Address</label>
+                            <input type="email" id="signup-email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-phone">Phone Number</label>
+                            <input type="tel" id="signup-phone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-dob">Date of Birth</label>
+                            <input type="date" id="signup-dob" name="dob" required>
+                        </div>
+                    </div>
+                    <div id="hospital-signup-fields" class="hidden">
+                        <div class="form-group">
+                            <label for="hospital-name">Hospital/Clinic Name</label>
+                            <input type="text" id="hospital-name" name="hospital-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="hospital-license">License/Registration Number</label>
+                            <input type="text" id="hospital-license" name="hospital-license">
+                        </div>
+                        <div class="form-group">
+                            <label for="hospital-contact-email">Official Email Address</label>
+                            <input type="email" id="hospital-contact-email" name="hospital-email">
+                        </div>
+                        <div class="form-group">
+                            <label for="hospital-phone">Contact Number</label>
+                            <input type="tel" id="hospital-phone" name="hospital-phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="hospital-address">Address</label>
+                            <input type="text" id="hospital-address" name="hospital-address">
+                        </div>
+                        <div class="form-group">
+                            <label for="hospital-type">Type of Facility</label>
+                            <select id="hospital-type" name="hospital-type" style="width: 100%; padding: 0.875rem 1rem; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 1rem;">
+                                <option value="">Select facility type</option>
+                                <option value="hospital">Hospital</option>
+                                <option value="clinic">Clinic</option>
+                                <option value="emergency">Emergency Center</option>
+                                <option value="specialty">Specialty Care</option>
+                                <option value="ambulance">Ambulance Service</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-password">Password</label>
+                        <input type="password" id="signup-password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-confirm">Confirm Password</label>
+                        <input type="password" id="signup-confirm" name="confirm-password" required>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" id="signup-btn">Create Account</button>
+                </form>
+            </div>
+            <div class="auth-info-section">
+                <div class="info-content" id="user-login-info">
+                    <h2 class="info-title">Welcome Back!</h2>
+                    <p class="info-description">
+                        Continue your healthcare journey with HealthSaathi. Access emergency services, connect with healthcare providers, and manage your health records securely.
+                    </p>
+                    <ul class="info-features">
+                        <li>Instant emergency response</li>
+                        <li>Secure health records</li>
+                        <li>24/7 healthcare support</li>
+                        <li>Connect with trusted providers</li>
+                    </ul>
+                </div>
+
+                <div class="info-content hidden" id="hospital-login-info">
+                    <h2 class="info-title">Hospital Portal</h2>
+                    <p class="info-description">
+                        Access your hospital dashboard to manage emergency requests, update availability, and coordinate with the HealthSaathi network.
+                    </p>
+                    <ul class="info-features">
+                        <li>Real-time emergency requests</li>
+                        <li>Bed availability management</li>
+                        <li>Patient coordination tools</li>
+                        <li>Analytics and reporting</li>
+                    </ul>
+                </div>
+
+                <div class="info-content hidden" id="signup-info">
+                    <h2 class="info-title">Join HealthSaathi</h2>
+                    <p class="info-description">
+                        Experience the future of emergency healthcare. Get connected to the right care at the right time through our intelligent platform.
+                    </p>
+                    <ul class="info-features">
+                        <li>Smart emergency routing</li>
+                        <li>Real-time hospital availability</li>
+                        <li>Health insights</li>
+                        <li>Seamless provider network</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+       
+function switchTab(tabName) {
+    document.querySelectorAll('.auth-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    document.querySelectorAll('.auth-form').forEach(form => {
+        form.classList.add('hidden');
+    });
+    document.querySelectorAll('.info-content').forEach(info => {
+        info.classList.add('hidden');
+    });
+    if (tabName === 'user-login') {
+        document.getElementById('user-login-form').classList.remove('hidden');
+        document.getElementById('user-login-info').classList.remove('hidden');
+    } else if (tabName === 'hospital-login') {
+        document.getElementById('hospital-login-form').classList.remove('hidden');
+        document.getElementById('hospital-login-info').classList.remove('hidden');
+    } else if (tabName === 'signup') {
+        document.getElementById('signup-form').classList.remove('hidden');
+        document.getElementById('signup-info').classList.remove('hidden');
+    }
+}
+
+function toggleSignupForm() {
+    const signupType = document.querySelector('input[name="signup-type"]:checked').value;
+    const userFields = document.getElementById('user-signup-fields');
+    const hospitalFields = document.getElementById('hospital-signup-fields');
+    const signupBtn = document.getElementById('signup-btn');
+    if (signupType === 'user') {
+        userFields.classList.remove('hidden');
+        hospitalFields.classList.add('hidden');
+        signupBtn.textContent = 'Create Patient Account';
+        // Make user fields required, hospital fields optional
+        document.querySelectorAll('#user-signup-fields input').forEach(input => {
+            input.required = true;
+        });
+        document.querySelectorAll('#hospital-signup-fields input, #hospital-signup-fields select').forEach(input => {
+            input.required = false;
+        });
+    } else {
+        userFields.classList.add('hidden');
+        hospitalFields.classList.remove('hidden');
+        signupBtn.textContent = 'Create Hospital Account';
+        // Make hospital fields required, user fields optional
+        document.querySelectorAll('#user-signup-fields input').forEach(input => {
+            input.required = false;
+        });
+        document.querySelectorAll('#hospital-signup-fields input, #hospital-signup-fields select').forEach(input => {
+            input.required = true;
+        });
+    }
+}
+async function handleUserLogin(event) {
+    event.preventDefault();
+    const email = document.getElementById('user-email').value;
+    const password = document.getElementById('user-password').value;
+    const btn = document.querySelector('#user-login-form .submit-btn'); 
+    
+    btn.textContent = 'Signing in...';
+    btn.disabled = true;
+    
+    try {
+        const response = await fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', // Changed to JSON
+            },
+            body: JSON.stringify({
+                username: email,
+                password: password,
+            }),
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            alert(`Welcome back! Redirecting to patient dashboard for ${email}`);
+            window.location.href = '/static/dashboard(users).html';
+        } else {
+            const errorData = await response.json();
+            alert(`Login failed: ${errorData.detail || 'Please check your credentials.'}`);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again later.');
+    } finally {
+        btn.textContent = 'Sign In as Patient';
+        btn.disabled = false;
+    }
+}
+
+async function handleHospitalLogin(event) {
+    event.preventDefault();
+    const hospitalId = document.getElementById('hospital-id').value;
+    const email = document.getElementById('hospital-email').value;
+    const password = document.getElementById('hospital-password').value;
+    const btn = document.querySelector('#hospital-login-form .submit-btn'); 
+    
+    btn.textContent = 'Signing in...';
+    btn.disabled = true;
+    
+    try {
+        const response = await fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', 
+            },
+            body: JSON.stringify({
+                username: email, 
+                password: password,
+            }),
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            alert(`Welcome back! Redirecting to hospital dashboard for ${hospitalId}`);
+            window.location.href = '/static/dashboard.html';
+        } else {
+            const errorData = await response.json();
+            alert(`Login failed: ${errorData.detail || 'Please check your credentials.'}`);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again later.');
+    } finally {
+        btn.textContent = 'Sign In as Hospital';
+        btn.disabled = false;
+    }
+}
+
+async function handleSignup(event) {
+    event.preventDefault();
+    const password = document.getElementById('signup-password').value;
+    const confirmPassword = document.getElementById('signup-confirm').value;
+    const signupType = document.querySelector('input[name="signup-type"]:checked').value;
+    let username = '';
+    if (signupType === 'user') {
+        username = document.getElementById('signup-email').value; 
+    } else {
+        const hospitalName = document.getElementById('hospital-name').value;
+        const hospitalEmail = document.getElementById('hospital-contact-email').value;
+        username = hospitalEmail; 
+    }
+    
+    if (password !== confirmPassword) {
+        alert('Passwords do not match!');
+        return;
+    }
+    const btn = document.querySelector('#signup-form .submit-btn'); 
+    btn.textContent = 'Creating Account...';
+    btn.disabled = true;
+    
+    try {
+        const response = await fetch('/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password,
+            }),
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            if (signupType === 'user') {
+                alert('Patient account created successfully! Welcome to HealthSaathi.');
+            } else {
+                alert('Hospital account created successfully! Your registration is under review.');
+            }
+        } else {
+            const errorData = await response.json();
+            alert(`Sign-up failed: ${errorData.detail || 'Please check your inputs.'}`);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again later.');
+    } finally {
+        btn.textContent = signupType === 'user' ? 'Create Patient Account' : 'Create Hospital Account';
+        btn.disabled = false;
+    }
+}
+document.addEventListener('DOMContentLoaded', function() {
+    // Attach form submission handlers
+    const userLoginForm = document.getElementById('user-login-form');
+    if (userLoginForm) {
+        userLoginForm.addEventListener('submit', handleUserLogin);
+    }
+    
+    const hospitalLoginForm = document.getElementById('hospital-login-form');
+    if (hospitalLoginForm) {
+        hospitalLoginForm.addEventListener('submit', handleHospitalLogin);
+    }
+    
+    const signupForm = document.getElementById('signup-form');
+    if (signupForm) {
+        signupForm.addEventListener('submit', handleSignup);
+    }
+    document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'translateY(-2px)';
+        });
+        input.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'translateY(0)';
+        });
+    });
+});
+    </script>
+</body>
+</html>
